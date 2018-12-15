@@ -25,8 +25,10 @@ namespace Space_Invaders
         Screen splashScreen, gameScreen, pauseScreen, summaryScreen;
         ScreenManager screenManager;
         GameObject planeObject;
+        int width = 750;
+
         GameStatesEnum currentGameState = GameStatesEnum.SPLASH;
-       
+        int plane_y_direction = 0, plane_x_direction = -3;
         int shoot_y_direction = -3;
 
 
@@ -40,7 +42,7 @@ namespace Space_Invaders
 
         List<string> BulletsToRemove = new List<string>();
         List<string> objectsToCheckForCollision = new List<string>();
-
+        string pottentialCollisionObjectName;
         //KOLEJNOŚĆ JEST WAŻNA
         private List<string> textures_locations = new List<string>() {
             "images\\background",

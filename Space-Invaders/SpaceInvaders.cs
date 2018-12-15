@@ -65,19 +65,47 @@ namespace Space_Invaders
                 "enemy_blue", "enemy_green", "enemy_red" },
                textureLoader.getListedContent(textures_locations));
 
-            names_to_load = new List<string>() { "background", "splash" };
-            screenManager.getScreen(GameStatesEnum.SPLASH).addObjectsAsABackGround(names_to_load, gameObjectsGenerator.getListOfGameObjects(names_to_load));
+            names_to_load = new List<string>() { "background" };
+            screenManager.getScreen(GameStatesEnum.GAME).addObjectsAsABackGround(names_to_load, gameObjectsGenerator.getListOfGameObjects(names_to_load));
 
-            names_to_load = new List<string>() { "enemy_red", "enemy_blue", "enemy_green" };
+            screenManager.getScreen(GameStatesEnum.GAME).addNewObjectToTheScreen("plane", gameObjectsGenerator.getGameObject("plane"));
+            screenManager.getScreen(GameStatesEnum.GAME).moveObjectToTheMiddleOfTheWidth("plane",
+                screenManager.getSelectedScreenHeight(GameStatesEnum.GAME) -
+                    (screenManager.getGameObjectFromTheScreen(GameStatesEnum.GAME, "plane").ObjectShape.Height + 25));
+
+
+            names_to_load = new List<string>() { "life_font", "point_font" };
+            fontGenerator.GenerateContent(names_to_load,
+                new List<SpriteFont>() { fontLoader.getContent(fonts_locations[0]), fontLoader.getContent(fonts_locations[0]) });
+            screenManager.getScreen(GameStatesEnum.GAME).addNewFontsToTheScreen(names_to_load, fontGenerator.getListOfFontObjects(names_to_load));
+
+            screenManager.moveFontOnTheScreen(GameStatesEnum.GAME, "life_font", new Point(25, 460));
+            screenManager.changeTextOfTheFontOnScreen(GameStatesEnum.GAME, "life_font", "Life: " + life);
+
+            screenManager.moveFontOnTheScreen(GameStatesEnum.GAME, "point_font", new Point(85, 460));
+            screenManager.changeTextOfTheFontOnScreen(GameStatesEnum.GAME, "point_font", "Points: " + points);
+
+
+            names_to_load = new List<string>() { "background" };
+            screenManager.getScreen(GameStatesEnum.PAUSE).addObjectsAsABackGround(names_to_load, gameObjectsGenerator.getListOfGameObjects(names_to_load));
+
+
+            names_to_load = new List<string>() { "pause_font" };
+            fontGenerator.GenerateContent(names_to_load,
+                new List<SpriteFont>() { fontLoader.getContent(fonts_locations[0]) });
+            screenManager.getScreen(GameStatesEnum.PAUSE).addNewFontsToTheScreen(names_to_load, fontGenerator.getListOfFontObjects(names_to_load));
+
+            screenManager.moveFontOnTheScreen(GameStatesEnum.PAUSE, "pause_font", new Point(360, 220));
+            screenManager.changeTextOfTheFontOnScreen(GameStatesEnum.PAUSE, "pause_font", "PAUSE");
+
+
+
+            names_to_load = new List<string>() { "enemy_blue", "enemy_green", "enemy_red" };
             screenManager.getScreen(GameStatesEnum.GAME).addNewObjectsToTheScreen(names_to_load, gameObjectsGenerator.getListOfGameObjects(names_to_load));
 
             screenManager.moveObjectOnTheScreen(GameStatesEnum.GAME, "enemy_red", new Point(2*screenManager.getGameObjectFromTheScreen(GameStatesEnum.GAME, "enemy_red").ObjectShape.Width,0));
             screenManager.moveObjectOnTheScreen(GameStatesEnum.GAME, "enemy_blue", new Point(screenManager.getGameObjectFromTheScreen(GameStatesEnum.GAME, "enemy_blue").ObjectShape.Width, 0));
-            /*screenManager.getScreen(GameStatesEnum.GAME).addNewObjectToTheScreen("plane", gameObjectsGenerator.getGameObject("plane"));
-            screenManager.getScreen(GameStatesEnum.GAME).moveObjectToTheMiddleOfTheWidth("plane",
-                screenManager.getSelectedScreenHeight(GameStatesEnum.GAME) -
-                    (screenManager.getGameObjectFromTheScreen(GameStatesEnum.GAME, "plane").ObjectShape.Height + 1));
-                    */
+
         }
 
         /// <summary>
