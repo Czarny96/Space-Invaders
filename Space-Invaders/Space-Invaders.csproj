@@ -57,6 +57,7 @@
     <Compile Include="SpaceInvaders_fields.cs" />
     <Compile Include="Screen.cs" />
     <Compile Include="ScreenManager.cs" />
+    <Compile Include="Utils.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">

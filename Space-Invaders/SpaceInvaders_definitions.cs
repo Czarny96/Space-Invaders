@@ -43,7 +43,12 @@ namespace Space_Invaders
         protected void playGame()
         {
 
-            Console.WriteLine("playGame");
+            if (t_point<2.5f)
+            {
+                screenManager.moveObjectOnTheScreen(currentGameState, "enemy_red",Utils.GetPointOnBezierCurve(
+                    new Vector2(0,0),new Vector2(50,0),new Vector2(50,100),new Vector2(10,100),t_point).ToPoint());
+                t_point +=  0.01F;
+            }
         }
 
 
@@ -96,6 +101,11 @@ namespace Space_Invaders
             points = 0;
 
             currentGameState = GameStatesEnum.GAME;
+        }
+
+        private void MakeEnemyMoveOnCurve(GameObject enemy)
+        {
+            
         }
     }
 

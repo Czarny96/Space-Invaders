@@ -26,15 +26,11 @@ namespace Space_Invaders
         ScreenManager screenManager;
         GameObject planeObject;
         GameStatesEnum currentGameState = GameStatesEnum.SPLASH;
-        //bool hasPlaneStarted = false;
-        //bool wasFullCircleMade = false;
-        //int map_y_direction = 2;
-        //int map_y_direction_fast = 8;
-        //int plane_y_direction = 0, plane_x_direction = -2;
-        int shoot_y_direction = -3;
-        //const int TILE_WIDTH=32,TILE_HEIGHT=32;
        
-        //int framesCounter=0;
+        int shoot_y_direction = -3;
+
+
+        float t_point = 0;
         bool isSplash = false, isGame = false, isPause = false, isSummary = false;
         bool isShoot = false;
         int points = 0, life = 3;
