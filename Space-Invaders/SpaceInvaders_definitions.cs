@@ -42,11 +42,20 @@ namespace Space_Invaders
       
         protected void playGame()
         {
-
-            if (t_point<2.5f)
+            List<string> enemies = new List<string>()
             {
-                screenManager.moveObjectOnTheScreen(currentGameState, "enemy_red",Utils.GetPointOnBezierCurve(
-                    new Vector2(0,0),new Vector2(50,0),new Vector2(50,100),new Vector2(10,100),t_point).ToPoint());
+                 "enemy_red",
+                 "enemy_blue",
+                 "enemy_green"
+            };
+            if (t_point<0.2f)
+            {
+                foreach (var enemy in enemies)
+                {
+                    screenManager.moveObjectOnTheScreen(currentGameState, enemy, Utils.GetPointOnBezierCurve(
+                    new Vector2(screenManager.getGameObjectFromTheScreen(currentGameState, enemy).ObjectShape.X, 0), new Vector2(screenManager.getGameObjectFromTheScreen(currentGameState, enemy).ObjectShape.X+50, 0), new Vector2(screenManager.getGameObjectFromTheScreen(currentGameState, enemy).ObjectShape.X+50, 100), new Vector2(screenManager.getGameObjectFromTheScreen(currentGameState, enemy).ObjectShape.X+10, 100), t_point).ToPoint());
+                }
+                
                 t_point +=  0.01F;
             }
         }

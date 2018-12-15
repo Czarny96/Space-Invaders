@@ -68,11 +68,11 @@ namespace Space_Invaders
             names_to_load = new List<string>() { "background", "splash" };
             screenManager.getScreen(GameStatesEnum.SPLASH).addObjectsAsABackGround(names_to_load, gameObjectsGenerator.getListOfGameObjects(names_to_load));
 
-            names_to_load = new List<string>() { "enemy_red" };
+            names_to_load = new List<string>() { "enemy_red", "enemy_blue", "enemy_green" };
             screenManager.getScreen(GameStatesEnum.GAME).addNewObjectsToTheScreen(names_to_load, gameObjectsGenerator.getListOfGameObjects(names_to_load));
 
-            
-
+            screenManager.moveObjectOnTheScreen(GameStatesEnum.GAME, "enemy_red", new Point(2*screenManager.getGameObjectFromTheScreen(GameStatesEnum.GAME, "enemy_red").ObjectShape.Width,0));
+            screenManager.moveObjectOnTheScreen(GameStatesEnum.GAME, "enemy_blue", new Point(screenManager.getGameObjectFromTheScreen(GameStatesEnum.GAME, "enemy_blue").ObjectShape.Width, 0));
             /*screenManager.getScreen(GameStatesEnum.GAME).addNewObjectToTheScreen("plane", gameObjectsGenerator.getGameObject("plane"));
             screenManager.getScreen(GameStatesEnum.GAME).moveObjectToTheMiddleOfTheWidth("plane",
                 screenManager.getSelectedScreenHeight(GameStatesEnum.GAME) -
