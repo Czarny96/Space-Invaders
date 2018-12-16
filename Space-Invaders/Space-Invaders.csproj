@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="CollisionMesh.cs" />
     <Compile Include="ContentLoader.cs" />
+    <Compile Include="EnemyGenerator.cs" />
     <Compile Include="EnemyGroup.cs" />
     <Compile Include="FontGenerator.cs" />
     <Compile Include="FontObject.cs" />

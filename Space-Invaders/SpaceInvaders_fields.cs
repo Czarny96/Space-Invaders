@@ -26,13 +26,23 @@ namespace Space_Invaders
         ScreenManager screenManager;
         GameObject planeObject;
         int width = 750;
+        bool where_enemies_generated = false;
+        Dictionary<string, List<string>> enemy_arrival_dict = new Dictionary<string,List<string>>()
+        {
+            { "left_top",new List<string>() },
+            { "left_bottom",new List<string>()},
+            { "right_top",new List<string>() },
+            {"right_bottom",new List<string>() }
 
+        };
+        Dictionary<string, List<Point>> enemy_arrival_vectors_dict = new Dictionary<string, List<Point>>();
+        
         GameStatesEnum currentGameState = GameStatesEnum.SPLASH;
         int plane_y_direction = 0, plane_x_direction = -3;
         int shoot_y_direction = -3;
 
 
-        float t_point = 0;
+        int index_of_points = 0;
         bool isSplash = false, isGame = false, isPause = false, isSummary = false;
         bool isShoot = false;
         int points = 0, life = 3;
@@ -53,6 +63,8 @@ namespace Space_Invaders
             "images\\enemy_green",
             "images\\enemy_red"
         };
+
+        private List<string> current_enemies = new List<string>();
 
 
         private List<string> fonts_locations = new List<string>() {

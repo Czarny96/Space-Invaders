@@ -14,13 +14,7 @@ namespace Space_Invaders
 {
     public partial class SpaceInvaders : Game
     {
-        protected void startPlane()
-        {
-
-            //hasPlaneStarted = true;
-           
-
-        }
+      
        
         protected void makeSplash()
         {
@@ -56,22 +50,8 @@ namespace Space_Invaders
                 screenManager.getScreen(GameStatesEnum.GAME).GetGameObject("plane").MovmentVector = new MovmentVector(0, 0);
             }
 
-            List<string> enemies = new List<string>()
-            {
-                 "enemy_red",
-                 "enemy_blue",
-                 "enemy_green"
-            };
-            if (t_point<0.2f)
-            {
-                foreach (var enemy in enemies)
-                {
-                    screenManager.moveObjectOnTheScreen(currentGameState, enemy, Utils.GetPointOnBezierCurve(
-                    new Vector2(screenManager.getGameObjectFromTheScreen(currentGameState, enemy).ObjectShape.X, 0), new Vector2(screenManager.getGameObjectFromTheScreen(currentGameState, enemy).ObjectShape.X+50, 0), new Vector2(screenManager.getGameObjectFromTheScreen(currentGameState, enemy).ObjectShape.X+50, 100), new Vector2(screenManager.getGameObjectFromTheScreen(currentGameState, enemy).ObjectShape.X+10, 100), t_point).ToPoint());
-                }
-                
-                t_point +=  0.01F;
-            }
+           
+            
 
             if (Keyboard.GetState().IsKeyDown(Keys.Space) && !isSpacePress)
             {
@@ -85,12 +65,13 @@ namespace Space_Invaders
 
             foreach (var bullet in nameBullet)
             {
-                pottentialCollisionObjectName = screenManager.getScreen(GameStatesEnum.GAME).checkIfObjectIsInCollisionWithOtherObjects(bullet, enemies);
+                pottentialCollisionObjectName = screenManager.getScreen(GameStatesEnum.GAME).checkIfObjectIsInCollisionWithOtherObjects(bullet, current_enemies);
 
                 if (pottentialCollisionObjectName != null)
                 {
                         screenManager.getScreen(GameStatesEnum.GAME).removeObject(pottentialCollisionObjectName);
                         objectsToCheckForCollision.Remove(pottentialCollisionObjectName);
+                        current_enemies.Remove(pottentialCollisionObjectName);
                         BulletsToRemove.Add(bullet);
                         
                         
@@ -110,7 +91,17 @@ namespace Space_Invaders
             BulletsToRemove.Clear();
 
 
-
+            if (where_enemies_generated == false)
+            {
+                generateEnemiesOnTheMap();
+                where_enemies_generated = true;
+            }
+            //TODO: Tymczasowo twardo zakodowane wartości
+            if (index_of_points< 100)
+            {
+                moveEnemiesByBezierCurve(current_enemies, "left_top", index_of_points);
+                index_of_points++;
+            }
 
 
 
@@ -196,14 +187,49 @@ namespace Space_Invaders
         }
 
 
-        private void MakeEnemyMoveOnCurve(GameObject enemy)
+       private List<Point> GenerateListOfBezierPoints(Vector2 p0, Vector2 p1, Vector2 p2, Vector2 p3,float goal,float rate)
         {
-            
+            List<Point> bezier_points = new List<Point>();
+            float t = 0f;
+            while (t<goal)
+            {
+                bezier_points.Add(Utils.GetPointOnBezierCurve(p0,p1,p2,p3,t).ToPoint());
+                t += rate;
+            }
+
+            return bezier_points;
+        }
+
+        private void generateEnemiesOnTheMap()
+        {
+            //enemy_arrival_dict[key] = true;
+            names_to_load = new List<string>() { "enemy_blue", "enemy_green", "enemy_red" };
+            Dictionary<string, GameObject> enemy_test = EnemyGenerator.generateEnemies(gameObjectsGenerator.getListOfGameObjects(names_to_load), 4);
+                    foreach (var item in enemy_test.Keys)
+                    {
+                        current_enemies.Add(item);
+                    }
+
+                    screenManager.getScreen(GameStatesEnum.GAME).addNewObjectsToTheScreen(enemy_test);
+                             
+        }
+
+        private void moveEnemiesByBezierCurve(List<string>enemies_to_move,string selected_bezier_curve, int point_index)
+        {
+            int object_width = screenManager.getGameObjectFromTheScreen(GameStatesEnum.GAME, enemies_to_move[0]).ObjectShape.Width;
+            int i = 0;
+            foreach (var enemy in enemies_to_move)
+            {
+                Point point = enemy_arrival_vectors_dict[selected_bezier_curve][point_index];
+                point.X -= object_width*i;
+                i++;
+               // point.Y -= screenManager.getGameObjectFromTheScreen(GameStatesEnum.GAME, enemy).ObjectShape.Y;
+                screenManager.moveObjectOnTheScreen(GameStatesEnum.GAME,enemy,point);
+            }
         }
     }
 
 }
-
 
 
 

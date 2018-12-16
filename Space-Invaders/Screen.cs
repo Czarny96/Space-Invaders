@@ -131,7 +131,11 @@ namespace Space_Invaders
         }
         public void addNewObjectsToTheScreen(Dictionary<string,GameObject> dictOfGameObjects)
         {
-           GameObjectsOnScreen.Union(dictOfGameObjects);
+            foreach (var key in dictOfGameObjects)
+            {
+                GameObjectsOnScreen.Add(key.Key,dictOfGameObjects[key.Key]);
+            }
+         
         }
 
         public void addObjectAsABackGround(string name,GameObject gameObject)
@@ -325,31 +329,6 @@ namespace Space_Invaders
             this.GetGameObject(name).squeezeObjectNTimes(n);
         }
 
-        //TODO: Ewentualnie zrefaktoryzować
-       /* public bool isOneObjectInCollisionWithSelectedFieldsOfTheMap(string objectName, List<string> fieldsTypeToCheck, int limitOfFieldFromTheBottomToCheck,Color colorToIgnoreCollision)
-        {
-            bool answer = false;
-            foreach (string fieldType in fieldsTypeToCheck)
-                
-            {
-                //NA RAZIE SZTYWNE WARTOŚCI
-                for (int i = Map.ListOfTiles.Count-1; i > limitOfFieldFromTheBottomToCheck; i--)
-                {
-                    Point pottential_collision_point = this.Map.ListOfTiles[i].isInCollisionWithOtherObject(this.GetGameObject(objectName));
-                    if (this.Map.ListOfTiles[i].ObjectType.Name.Equals(fieldType) && 
-                        !pottential_collision_point.Equals(new Point(-1,-1))
-                     )
-                    {
-                        if (this.Map.ListOfTiles[i].obtainColorOfThePixelInGivenPoint(new Point(0,0))!=colorToIgnoreCollision)
-                        {
-	                          answer = true;
-	                          break;
-                        }
-                    } 
-                }
-            }
-
-            return answer;
-        }*/
+        
     }
 }

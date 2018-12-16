@@ -17,6 +17,15 @@ namespace Space_Invaders
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+           
+            //TODO: Tymczasowo
+            enemy_arrival_vectors_dict.Add("left_top",GenerateListOfBezierPoints(new Vector2(0, 0), new Vector2(200, 0), new Vector2(200, 200), new Vector2(150, 100),2.0f,0.01f));
+            enemy_arrival_vectors_dict.Add("left_bottom", GenerateListOfBezierPoints(new Vector2(480, 800), new Vector2(240, 0), new Vector2(0, 100), new Vector2(10, 100), 2.0f, 0.01f));
+            enemy_arrival_vectors_dict.Add("right_top", GenerateListOfBezierPoints(new Vector2(0, 0), new Vector2(50, 0), new Vector2(50, 100), new Vector2(10, 100), 2.0f, 0.01f));
+            enemy_arrival_vectors_dict.Add("right_bottom", GenerateListOfBezierPoints(new Vector2(0, 0), new Vector2(50, 0), new Vector2(50, 100), new Vector2(10, 100), 2.0f, 0.01f));
+
+            
+
 
             graphics.IsFullScreen = false;
 
@@ -100,12 +109,10 @@ namespace Space_Invaders
 
 
 
-            names_to_load = new List<string>() { "enemy_blue", "enemy_green", "enemy_red" };
-            screenManager.getScreen(GameStatesEnum.GAME).addNewObjectsToTheScreen(names_to_load, gameObjectsGenerator.getListOfGameObjects(names_to_load));
+           
+           
 
-            screenManager.moveObjectOnTheScreen(GameStatesEnum.GAME, "enemy_red", new Point(2*screenManager.getGameObjectFromTheScreen(GameStatesEnum.GAME, "enemy_red").ObjectShape.Width,0));
-            screenManager.moveObjectOnTheScreen(GameStatesEnum.GAME, "enemy_blue", new Point(screenManager.getGameObjectFromTheScreen(GameStatesEnum.GAME, "enemy_blue").ObjectShape.Width, 0));
-
+           
         }
 
         /// <summary>
