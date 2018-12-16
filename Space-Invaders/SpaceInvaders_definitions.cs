@@ -104,7 +104,7 @@ namespace Space_Invaders
             }
 
 
-
+            if (points == 4) currentGameState = GameStatesEnum.SUMMARY;
 
 
 
@@ -120,12 +120,17 @@ namespace Space_Invaders
                 names_to_load = new List<string>() { "background" };
                 screenManager.getScreen(GameStatesEnum.SUMMARY).addObjectsAsABackGround(names_to_load, gameObjectsGenerator.getListOfGameObjects(names_to_load));
                 isSummary = true;
+
+                names_to_load = new List<string>() { "summary_font" };
+                fontGenerator.GenerateContent(names_to_load,
+                    new List<SpriteFont>() { fontLoader.getContent(fonts_locations[0]) });
+                screenManager.getScreen(GameStatesEnum.SUMMARY).addNewFontsToTheScreen(names_to_load, fontGenerator.getListOfFontObjects(names_to_load));
             }
             
 
             screenManager.moveFontOnTheScreen(GameStatesEnum.SUMMARY, "summary_font", new Point(359, 235));
-            screenManager.changeTextOfTheFontOnScreen(GameStatesEnum.SUMMARY, "summary_font", "Points:" + points + "\nLife: " + life + " \nNew Game: Y     Exit: N");
-
+            screenManager.changeTextOfTheFontOnScreen(GameStatesEnum.SUMMARY, "summary_font", "Points:" + points + "\nLife: " + life + " \nNew Game: Y\nExit: N");
+            
             if (Keyboard.GetState().IsKeyDown(Keys.Y))
             {
                 RestartGame();
