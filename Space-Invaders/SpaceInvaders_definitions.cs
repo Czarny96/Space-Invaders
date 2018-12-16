@@ -72,6 +72,7 @@ namespace Space_Invaders
                         screenManager.getScreen(GameStatesEnum.GAME).removeObject(pottentialCollisionObjectName);
                         objectsToCheckForCollision.Remove(pottentialCollisionObjectName);
                         current_enemies.Remove(pottentialCollisionObjectName);
+                        RemoveEnemyFromHisDictionnary(pottentialCollisionObjectName);
                         BulletsToRemove.Add(bullet);
                         
                         
@@ -91,24 +92,74 @@ namespace Space_Invaders
             BulletsToRemove.Clear();
 
 
-            if (where_enemies_generated == false)
+            if (enemy_arrival_dict["left_top"].Count==0)
             {
-                generateEnemiesOnTheMap();
-                where_enemies_generated = true;
+                generateEnemiesOnTheMap("left_top");
+                left_top_index = 0;
+                move_left_top = true;
+
+
+            }
+            if (enemy_arrival_dict["left_bottom"].Count == 0)
+            {
+               
+                generateEnemiesOnTheMap("left_bottom");
+                left_bottom_index = 0;
+                move_left_bottom = true;
+
+
+
+            }
+            if (enemy_arrival_dict["right_top"].Count == 0)
+            {
+                
+                generateEnemiesOnTheMap("right_top");
+                right_top_index = 0;
+                move_right_top = true;
+            }
+            if (enemy_arrival_dict["right_bottom"].Count == 0)
+            {
+              
+                generateEnemiesOnTheMap("right_bottom");
+                right_bottom_index = 0;
+                move_right_bottom = true;
             }
             //TODO: Tymczasowo twardo zakodowane wartości
-            if (index_of_points< 100)
+            if (move_left_top)
             {
-                moveEnemiesByBezierCurve(current_enemies, "left_top", index_of_points);
-                index_of_points++;
+                moveEnemiesFromSelectedGroupByCurve("left_top",ref left_top_index);
             }
+            if (move_left_bottom)
+            {
+                moveEnemiesFromSelectedGroupByCurve("left_bottom",ref left_bottom_index);
+            }
+            if (move_right_top)
+            {
+                moveEnemiesFromSelectedGroupByCurve("right_top",ref right_top_index);
+            }
+            if (move_right_bottom)
+            {
+                moveEnemiesFromSelectedGroupByCurve("right_bottom",ref right_bottom_index);
+            }
+            if (enemy_movment_counter == 0)
+            {
+                enemy_x_movment = -enemy_x_movment;
+                //ruch przeciwników w lewo i prawo
+                foreach (var enemy in current_enemies)
+                {
+                   
+                    screenManager.getGameObjectFromTheScreen(currentGameState, enemy).changeMovementVector(enemy_x_movment, 0);
+                    
+                }
+
+                enemy_movment_counter = 60;
 
 
-
-
-
-
-
+            }
+            else
+            {
+                enemy_movment_counter--;
+            }
 
 
             if (life == 0) currentGameState = GameStatesEnum.SUMMARY;
@@ -136,6 +187,7 @@ namespace Space_Invaders
             }
         }
 
+        
         protected void generateBullet()
         {
             gameObjectsGenerator.GenerateContent("bullet" + counterBullet,
@@ -200,13 +252,14 @@ namespace Space_Invaders
             return bezier_points;
         }
 
-        private void generateEnemiesOnTheMap()
+        private void generateEnemiesOnTheMap(string which_enemies)
         {
             //enemy_arrival_dict[key] = true;
             names_to_load = new List<string>() { "enemy_blue", "enemy_green", "enemy_red" };
             Dictionary<string, GameObject> enemy_test = EnemyGenerator.generateEnemies(gameObjectsGenerator.getListOfGameObjects(names_to_load), 4);
                     foreach (var item in enemy_test.Keys)
                     {
+                        enemy_arrival_dict[which_enemies].Add(item);
                         current_enemies.Add(item);
                     }
 
@@ -216,7 +269,7 @@ namespace Space_Invaders
 
         private void moveEnemiesByBezierCurve(List<string>enemies_to_move,string selected_bezier_curve, int point_index)
         {
-            int object_width = screenManager.getGameObjectFromTheScreen(GameStatesEnum.GAME, enemies_to_move[0]).ObjectShape.Width;
+            int object_width = screenManager.getGameObjectFromTheScreen(GameStatesEnum.GAME, enemies_to_move.First()).ObjectShape.Width;
             int i = 0;
             foreach (var enemy in enemies_to_move)
             {
@@ -225,6 +278,63 @@ namespace Space_Invaders
                 i++;
                // point.Y -= screenManager.getGameObjectFromTheScreen(GameStatesEnum.GAME, enemy).ObjectShape.Y;
                 screenManager.moveObjectOnTheScreen(GameStatesEnum.GAME,enemy,point);
+            }
+        }
+        private void moveEnemiesFromSelectedGroupByCurve(string group,ref int passed_index)
+        {
+            if (passed_index < 100)
+            {
+
+                List<string> item = enemy_arrival_dict[group];
+
+                if (item.Count > 0)
+                {
+                    moveEnemiesByBezierCurve(item, group, passed_index);
+                }
+
+
+                passed_index++;
+            }
+            else
+            {
+                //index_of_points = 0;
+                if (move_left_top)
+                {
+                    move_left_top = false;
+                }
+                else if (move_left_bottom)
+                {
+                    move_left_bottom = false;
+                }
+                else if (move_right_top)
+                {
+                    move_right_top = false;
+                }
+                else if(move_right_bottom)
+                {
+                    move_right_bottom = false;
+                }
+            }
+
+        }
+
+        private void RemoveEnemyFromHisDictionnary(string enemy_name)
+        {
+            if (enemy_arrival_dict["left_top"].Contains(enemy_name))
+            {
+                enemy_arrival_dict["left_top"].Remove(enemy_name);
+            }
+            else if (enemy_arrival_dict["left_bottom"].Contains(enemy_name))
+            {
+                enemy_arrival_dict["left_bottom"].Remove(enemy_name);
+            }
+            else if (enemy_arrival_dict["right_top"].Contains(enemy_name))
+            {
+                enemy_arrival_dict["right_top"].Remove(enemy_name);
+            }
+            else if (enemy_arrival_dict["right_bottom"].Contains(enemy_name))
+            {
+                enemy_arrival_dict["right_bottom"].Remove(enemy_name);
             }
         }
     }

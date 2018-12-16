@@ -16,6 +16,10 @@ namespace Space_Invaders
         List<string> names_of_remove = new List<string>();
         List<string> nameEnemy = new List<string>();
         List<string> nameBullet = new List<string>();
+        bool move_left_top=false, move_left_bottom=false, move_right_top=false, move_right_bottom=false;
+        int left_top_index = 0, left_bottom_index = 0, right_top_index = 0, right_bottom_index = 0;
+        int enemy_movment_counter = 60;
+        int enemy_x_movment = 1;
         ContentLoader<SpriteFont> fontLoader;
         FontGenerator fontGenerator;
         GraphicsDeviceManager graphics;
