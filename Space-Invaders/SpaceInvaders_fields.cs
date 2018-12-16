@@ -18,8 +18,12 @@ namespace Space_Invaders
         List<string> nameBullet = new List<string>();
         bool move_left_top=false, move_left_bottom=false, move_right_top=false, move_right_bottom=false;
         int left_top_index = 0, left_bottom_index = 0, right_top_index = 0, right_bottom_index = 0;
-        int enemy_movment_counter = 60;
+        int enemy_movment_counter = 60, enemy_charge_counter = 240, lasting_charge_counter=60, lasting_return_counter=60;
         int enemy_x_movment = 1;
+        bool is_enemy_charging = false, is_enemy_returning = false, was_enemy_shoot_down = false;
+        string enemy_selected_to_charge_name;
+        GameObject enemy_selected_to_charge;
+
         ContentLoader<SpriteFont> fontLoader;
         FontGenerator fontGenerator;
         GraphicsDeviceManager graphics;
@@ -30,7 +34,7 @@ namespace Space_Invaders
         ScreenManager screenManager;
         GameObject planeObject;
         int width = 750;
-        bool where_enemies_generated = false;
+        
         Dictionary<string, List<string>> enemy_arrival_dict = new Dictionary<string,List<string>>()
         {
             { "left_top",new List<string>() },
@@ -46,13 +50,13 @@ namespace Space_Invaders
         int shoot_y_direction = -3;
 
 
-        int index_of_points = 0;
+    
         bool isSplash = false, isGame = false, isPause = false, isSummary = false;
         bool isShoot = false;
         int points = 0, life = 3;
         static int counterBullet = 0;
 
-        bool isSpacePress = false, isTimerOff = true, isPPress = false;
+        bool isSpacePress = false, isPPress = false;
 
         List<string> BulletsToRemove = new List<string>();
         List<string> objectsToCheckForCollision = new List<string>();

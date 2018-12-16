@@ -65,12 +65,19 @@ namespace Space_Invaders
 
             foreach (var bullet in nameBullet)
             {
-                pottentialCollisionObjectName = screenManager.getScreen(GameStatesEnum.GAME).checkIfObjectIsInCollisionWithOtherObjects(bullet, current_enemies);
+                List<string> collision_objects= new List<string>();
+                current_enemies.ForEach(enemy=>collision_objects.Add(enemy));
+                collision_objects.Add("plane");
+                pottentialCollisionObjectName = screenManager.getScreen(GameStatesEnum.GAME).checkIfObjectIsInCollisionWithOtherObjects(bullet, collision_objects);
 
-                if (pottentialCollisionObjectName != null)
+                if (pottentialCollisionObjectName != null && pottentialCollisionObjectName!="plane")
                 {
+                    if (pottentialCollisionObjectName==enemy_selected_to_charge_name)
+                    {
+                        was_enemy_shoot_down = true;
+                    }
                         screenManager.getScreen(GameStatesEnum.GAME).removeObject(pottentialCollisionObjectName);
-                        objectsToCheckForCollision.Remove(pottentialCollisionObjectName);
+                      
                         current_enemies.Remove(pottentialCollisionObjectName);
                         RemoveEnemyFromHisDictionnary(pottentialCollisionObjectName);
                         BulletsToRemove.Add(bullet);
@@ -81,6 +88,20 @@ namespace Space_Invaders
                         screenManager.moveFontOnTheScreen(GameStatesEnum.GAME, "point_font", new Point(85, 460));
                         screenManager.changeTextOfTheFontOnScreen(GameStatesEnum.GAME, "point_font", "Points: " + points);
 
+                }
+                else if (pottentialCollisionObjectName=="plane")
+                {
+                   
+                    BulletsToRemove.Add(bullet);
+                    life--;
+
+                    
+                    screenManager.getScreen(GameStatesEnum.GAME).moveObjectToTheMiddleOfTheWidth("plane",
+                        screenManager.getSelectedScreenHeight(GameStatesEnum.GAME) -
+                            (screenManager.getGameObjectFromTheScreen(GameStatesEnum.GAME, "plane").ObjectShape.Height + 25));
+
+                    screenManager.moveFontOnTheScreen(GameStatesEnum.GAME, "life_font", new Point(25, 460));
+                    screenManager.changeTextOfTheFontOnScreen(GameStatesEnum.GAME, "life_font", "Life: " + life);
                 }
             }
 
@@ -148,7 +169,8 @@ namespace Space_Invaders
                 foreach (var enemy in current_enemies)
                 {
                    
-                    screenManager.getGameObjectFromTheScreen(currentGameState, enemy).changeMovementVector(enemy_x_movment, 0);
+                    screenManager.getGameObjectFromTheScreen(currentGameState, enemy).changeMovementVector(enemy_x_movment, 
+                        screenManager.getGameObjectFromTheScreen(currentGameState, enemy).MovmentVector.Y_movment);
                     
                 }
 
@@ -160,10 +182,59 @@ namespace Space_Invaders
             {
                 enemy_movment_counter--;
             }
+            if (enemy_charge_counter == 0 && is_enemy_charging == false)
+            {
+                ChargeEnemy();
+                was_enemy_shoot_down = false;
+                lasting_charge_counter = 60;
+                enemy_charge_counter = 240;
+            }else if(enemy_charge_counter >0 && is_enemy_charging==false)
+            {
+                enemy_charge_counter --;
+            }
+            if (lasting_charge_counter==0 && is_enemy_charging==true)
+            {
+                if (was_enemy_shoot_down==false)
+                {
+                    generate_enemy_bullet();
+                }
+              
+                make_enemy_return();
+                lasting_return_counter = 60;
+                
+            }
+            else if(lasting_charge_counter > 0 && is_enemy_charging == true)
+            {
+                lasting_charge_counter--;
+            }
+
+            if (lasting_return_counter==0&&is_enemy_returning==true && is_enemy_charging == false)
+            {
+                stopEnemy();
+
+            }
+            else if(lasting_return_counter > 0 && is_enemy_returning == true && is_enemy_charging ==false)
+            {
+                lasting_return_counter--;
+            }
 
 
             if (life == 0) currentGameState = GameStatesEnum.SUMMARY;
         }
+
+        protected void make_enemy_return()
+        {
+            enemy_selected_to_charge.changeMovementVector(0, -2);
+            is_enemy_charging = false;
+            is_enemy_returning = true;
+
+        }
+        protected void stopEnemy()
+        {
+            enemy_selected_to_charge.changeMovementVector(enemy_x_movment, 0);
+            is_enemy_returning = false;
+        }
+
         protected void makeSummary()
         {
             if (!isSummary)
@@ -212,6 +283,30 @@ namespace Space_Invaders
 
             }
         }
+        protected void generate_enemy_bullet()
+        {
+            gameObjectsGenerator.GenerateContent("bullet" + counterBullet,
+                   textureLoader.getContent(textures_locations[3]));
+            screenManager.getScreen(GameStatesEnum.GAME).addHoldOutObject("bullet" + counterBullet, gameObjectsGenerator.getGameObject("bullet" + counterBullet));
+            isShoot = true;
+            planeObject = enemy_selected_to_charge;
+            int bullet_width = screenManager.getScreen(GameStatesEnum.GAME).getHoldoutObject("bullet" + counterBullet).ObjectShape.Width;
+
+            Point location = new Point(planeObject.ObjectShape.X + (planeObject.ObjectShape.Width / 2 - 2), planeObject.ObjectShape.Y + planeObject.ObjectShape.Height+2);
+
+            if (screenManager.getScreen(GameStatesEnum.GAME).GetGameObject("bullet" + counterBullet) == null)
+            {
+                screenManager.orderScreenToDisplayHoldoutObject(GameStatesEnum.GAME, "bullet" + counterBullet, location);
+
+                screenManager.getScreen(GameStatesEnum.GAME).GetGameObject("bullet" + counterBullet).MovmentVector = new MovmentVector(0, -shoot_y_direction);
+                screenManager.getScreen(GameStatesEnum.GAME).moveObjectToTheNewLocation("bullet" + counterBullet, location);
+
+                nameBullet.Add("bullet" + counterBullet);
+                counterBullet++;
+
+
+            }
+        }
 
         protected void RestartGame()
         {
@@ -220,7 +315,7 @@ namespace Space_Invaders
             isSplash = false;
             isSummary = false;
             isSpacePress = false;
-            isTimerOff = true;
+           
             isPPress = false;
 
             nameEnemy.Clear();
@@ -297,7 +392,7 @@ namespace Space_Invaders
             }
             else
             {
-                //index_of_points = 0;
+              
                 if (move_left_top)
                 {
                     move_left_top = false;
@@ -316,6 +411,20 @@ namespace Space_Invaders
                 }
             }
 
+        }
+        private GameObject pick_enemy()
+        {
+            Random random_generator = new Random(DateTimeOffset.Now.Millisecond);
+            enemy_selected_to_charge_name = current_enemies[random_generator.Next(0, current_enemies.Count)];
+            return screenManager.getGameObjectFromTheScreen(GameStatesEnum.GAME,
+               enemy_selected_to_charge_name );
+        }
+
+        private void ChargeEnemy()
+        {
+            enemy_selected_to_charge = pick_enemy();
+            enemy_selected_to_charge.changeMovementVector(0, 2);
+            is_enemy_charging = true;
         }
 
         private void RemoveEnemyFromHisDictionnary(string enemy_name)
