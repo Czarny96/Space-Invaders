@@ -20,9 +20,9 @@ namespace Space_Invaders
            
             //TODO: Tymczasowo
             enemy_arrival_vectors_dict.Add("left_top",GenerateListOfBezierPoints(new Vector2(0, 0), new Vector2(200, 0), new Vector2(200, 200), new Vector2(150, 100),2.0f,0.01f));
-            enemy_arrival_vectors_dict.Add("left_bottom", GenerateListOfBezierPoints(new Vector2(480, 800), new Vector2(240, 0), new Vector2(0, 100), new Vector2(10, 100), 2.0f, 0.01f));
-            enemy_arrival_vectors_dict.Add("right_top", GenerateListOfBezierPoints(new Vector2(0, 0), new Vector2(50, 0), new Vector2(50, 100), new Vector2(10, 100), 2.0f, 0.01f));
-            enemy_arrival_vectors_dict.Add("right_bottom", GenerateListOfBezierPoints(new Vector2(0, 0), new Vector2(50, 0), new Vector2(50, 100), new Vector2(10, 100), 2.0f, 0.01f));
+            enemy_arrival_vectors_dict.Add("left_bottom", GenerateListOfBezierPoints(new Vector2(0, 100), new Vector2(200, 100), new Vector2(200, 300), new Vector2(300, 200), 2.0f, 0.01f));
+            enemy_arrival_vectors_dict.Add("right_top", GenerateListOfBezierPoints(new Vector2(480, 0), new Vector2(240, 0), new Vector2(290, 100), new Vector2(600, 100), 2.0f, 0.01f));
+            enemy_arrival_vectors_dict.Add("right_bottom", GenerateListOfBezierPoints(new Vector2(700, 130), new Vector2(240, 130), new Vector2(290, 200), new Vector2(670, 200), 2.0f, 0.01f));
 
             
 
